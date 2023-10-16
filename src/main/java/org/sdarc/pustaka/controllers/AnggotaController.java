@@ -6,60 +6,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/anggota")
+@RequestMapping("/api/anggota")
 public class AnggotaController {
 
     @Autowired
     AnggotaRepository repo;
 
-    @PostMapping(path = "/tambah-anggota")
-    public @ResponseBody Anggota tambahAnggota(
+    //    Make New Data Anggota
+    @PostMapping("/buat-baru")
+    public @ResponseBody Anggota buatAnggotaBaru(
             @RequestParam String nama,
-            @RequestParam int jk,
             @RequestParam String email,
-            @RequestParam String nomorHp
-    ){
-        Anggota anggota = new Anggota();
-        anggota.nama = nama;
-        anggota.jk = jk;
-        anggota.email = email;
-        anggota.nomorHp = nomorHp;
-
-        repo.save(anggota);
-
-        return anggota;
+            @RequestParam String nomorHp,
+            @RequestParam String jk
+    ) {
+        Anggota a = new Anggota();
+        a.nama = nama;
+        a.email = email;
+        a.nomorHp = nomorHp;
+        a.jk = jk;
+        repo.save(a);
+        return a;
     }
 
-    @GetMapping("/{nomor}")
-    public Anggota cariAnggotaById(@PathVariable("nomor")String nomor){
-        Anggota anggota = repo.findById(nomor).orElse(null);
-        return anggota;
+    //    Search and Get Data by id
+    @GetMapping("/{id}")
+    public Anggota cariSatuAnggota(@PathVariable("id") String nomor){
+        return repo.findById(nomor).orElse(null);
     }
 
-    @PutMapping("/{nomor}")
-    public Anggota ubahAnggotaById(
-            @PathVariable("nomor")String nomor,
+    //    Edit Data by id
+    @PutMapping("/{id}")
+    public Anggota ubahSatuAnggotaById(
+            @PathVariable("id") String nomor,
             @RequestParam String nama,
-            @RequestParam int jk,
             @RequestParam String email,
-            @RequestParam String nomorHp
-    ){
-        Anggota anggota = repo.findById(nomor).orElse(null);
-        anggota.nama = nama;
-        anggota.jk = jk;
-        anggota.email = email;
-        anggota.nomorHp = nomorHp;
+            @RequestParam String nomorHp,
+            @RequestParam String jk
+    ) {
+        Anggota a = repo.findById(nomor).orElse(null);
 
-        repo.save(anggota);
-
-        return anggota;
+        a.nama = nama;
+        a.email = email;
+        a.nomorHp = nomorHp;
+        a.jk = jk;
+        repo.save(a);
+        return a;
     }
 
-    @DeleteMapping("/{nomor}")
-    public String hapusAnggotaById(@PathVariable("nomor") String nomor){
-        Anggota anggota = repo.findById(nomor).orElse(null);
-        repo.delete(anggota);
-        return "BERHASIL MENGHAPUS";
+    //   Delete data by id
+    @DeleteMapping("/{id}")
+    public Anggota hapusSatuAnggotaById(@PathVariable("id") String nomor) {
+        Anggota a = repo.findById(nomor).orElse(null);
+        assert a != null;
+        repo.delete(a);
+        return a;
     }
 
 }

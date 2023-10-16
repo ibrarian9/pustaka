@@ -1,32 +1,38 @@
 package org.sdarc.pustaka.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Entity
-public class Anggota{
+@Table(name = "anggota")
+public class Anggota {
 
         @Id
+        @Column(name = "nomor")
         public String nomor;
+        @Column(name = "nama")
         public String nama;
-        public int jk;
+        @Column(name = "email")
         public String email;
+        @Column(name = "nomor_hp")
         public String nomorHp;
+        @Column(name = "jenis_kelamin")
+        public String jk;
 
         public Anggota() {
-                this.nomor = generateUniqueID();
+                this.nomor = Uuid(10);
         }
 
-        private String generateUniqueID() {
-                Random random = new Random();
-                StringBuilder idBuilder = new StringBuilder(5);
-
-                for (int i = 0; i < 5; i++) {
-                        idBuilder.append(random.nextInt(10)); // Generates a random digit (0-9)
+        private String Uuid(int length) {
+                SecureRandom random = new SecureRandom();
+                String Chara = "ABCDEFGHI123456789";
+                StringBuilder idBuild = new StringBuilder(length);
+                for (int i = 0; i < length; i++) {
+                        int randomIndex = random.nextInt(Chara.length());
+                        char randomChar = Chara.charAt(randomIndex);
+                        idBuild.append(randomChar);
                 }
-
-                return idBuilder.toString();
+                return idBuild.toString();
         }
 }

@@ -2,10 +2,11 @@ package org.sdarc.pustaka.models;
 
 import java.util.Date;
 
-public record Peminjaman(
-        Date tanggalPinjam,
-        Date tanggalKembali,
-        Anggota anggota,
-        Buku[] bukubuku
-) {
+public class Peminjaman {
+    public Date tanggalPinjam;
+    public Date tanggalKembali;
+    public Anggota anggota;
+    public Buku[] bukubuku;
 }
+
+

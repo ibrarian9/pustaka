@@ -6,59 +6,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/petugas")
+@RequestMapping("/api/petugas")
 public class PetugasController {
 
     @Autowired
     PetugasRepository repo;
 
-    @PostMapping(path = "/tambah-petugas")
-    public @ResponseBody Petugas tambahPetugas(
+    // Make New Data
+    @PostMapping("/buat-baru")
+    public @ResponseBody Petugas buatPetugasBaru(
             @RequestParam String nama,
-            @RequestParam String userName,
+            @RequestParam String username,
             @RequestParam String password
-    ){
-        Petugas petugas = new Petugas();
-        petugas.nama = nama;
-        petugas.username = userName;
-        petugas.password = password;
-
-        repo.save(petugas);
-
-        return petugas;
+    ) {
+        Petugas p = new Petugas();
+        p.nama = nama;
+        p.username = username;
+        p.password = password;
+        repo.save(p);
+        return p;
     }
 
-    /*
-    Sengaja gak bikin pencarian petugas,
-    kayak gak masuk akal aja petugas nyari petugas awoakowak
-     */
-
-    @PutMapping("/{nomor}")
-    public Petugas ubahPetugasById(
-            @PathVariable("nomor")String nomor,
-            @RequestParam String nama,
-            @RequestParam String userName,
-            @RequestParam String password
-    ){
-        Petugas petugas = repo.findById(nomor).orElse(null);
-        petugas.nama = nama;
-        petugas.username = userName;
-        petugas.password = password;
-
-        repo.save(petugas);
-
-        return petugas;
+    // Search and Get data by id
+    @GetMapping("/{id}")
+    public Petugas cariSatuPetugas(@PathVariable("id") String nomor) {
+        return repo.findById(nomor).orElse(null);
     }
 
-    @DeleteMapping("/{nomor}")
-    public String hapusPetugasById(
-            @PathVariable("nomor") String nomor
-    ){
-        Petugas petugas = repo.findById(nomor).orElse(null);
-        repo.delete(petugas);
+    // Edit data by id
+    @PutMapping("/{id}")
+    public @ResponseBody Petugas ubahPetugasBaruById(
+            @PathVariable("id") String nomor,
+            @RequestParam String nama,
+            @RequestParam String username,
+            @RequestParam String password
+    ) {
+        Petugas p = repo.findById(nomor).orElse(null);
 
-        return "BERHASIL MENGHAPUS";
+        p.nama = nama;
+        p.username = username;
+        p.password = password;
+        repo.save(p);
+        return p;
+    }
+
+    // Delete Data by id
+    @DeleteMapping("/{id}")
+    public Petugas hapusSatuPetugasById(@PathVariable("id") String nomor) {
+        Petugas p = repo.findById(nomor).orElse(null);
+        assert p != null;
+        repo.delete(p);
+        return p;
     }
 }
-
-
